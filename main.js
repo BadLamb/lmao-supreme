@@ -1,4 +1,5 @@
 const base_url = "http://supremenewyork.com"
+const bot_token = ""
 
 const options = {
     name: "Luca Todesco",
@@ -15,19 +16,29 @@ const options = {
     expy: "2019",
 }
 
-let Nightmare = require('nightmare');
-let nightmare = Nightmare({
+const Nightmare = require('nightmare');
+const nightmare = Nightmare({
     show: true,
     typeInterval: 1,
 });
 
-let exec = require('child_process').exec;
+let id = 0;
+const exec = require('child_process').exec;
+
+const TelegramBot = require('node-telegram-bot-api');
+const bot = new TelegramBot(bot_token, {polling: true});
+
+bot.on('message', (msg) => {
+    id = msg.chat.id
+    console.log("done")
+})
 
 let available = []
 
 exec("python available.py", (error, stdout, stderr) => {
     available = stdout.split('\n')
     nightmare
+        .wait(5000)
         .goto(base_url + available[2])
         .click("#add-remove-buttons > input")
         .wait(100)
@@ -53,6 +64,11 @@ let buy_product = () => {
         .click("#cart-cc > fieldset > p > label > div > ins")
         .inject('js', 'captcha_bypass.js')
         .wait("#confirmation")
+        .screenshot("done.png")
+        .then(() => {
+            bot.sendMessage(id, "Fucking done it bro")
+            bot.sendDocument(id, "done.png")
+        })
         .catch(e => {
             console.log(e)
           })
