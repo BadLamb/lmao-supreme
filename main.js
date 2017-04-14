@@ -20,6 +20,9 @@ const Nightmare = require('nightmare');
 const nightmare = Nightmare({
     show: true,
     typeInterval: 1,
+    webPreferences: {
+        images: false,
+    }
 });
 
 let id = 0;
@@ -34,11 +37,11 @@ bot.on('message', (msg) => {
 })
 
 let available = []
-
+let start = 0
 exec("python available.py", (error, stdout, stderr) => {
     available = stdout.split('\n')
+    start = +new Date();
     nightmare
-        .wait(5000)
         .goto(base_url + available[2])
         .click("#add-remove-buttons > input")
         .wait(100)
@@ -66,8 +69,13 @@ let buy_product = () => {
         .wait("#confirmation")
         .screenshot("done.png")
         .then(() => {
-            bot.sendMessage(id, "Fucking done it bro")
+            let end = +new Date();
+            let t = (end-start)/1000
+            bot.sendMessage(id, "Fucking done it bro, took " + t.toString() + "s")
             bot.sendDocument(id, "done.png")
+            setTimeout(() => {
+                process.exit()
+            }, 1000)
         })
         .catch(e => {
             console.log(e)
