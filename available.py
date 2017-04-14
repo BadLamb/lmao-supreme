@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from time import sleep
 
 def get_products():
     raw_html = requests.get("http://www.supremenewyork.com/shop/all").text
