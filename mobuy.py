@@ -1,17 +1,24 @@
 import requests
 from pprint import pprint
 import time
+import telepot
 
 to_buy = []
 
-keyword = "knit"
+keyword = "truth"
 fsize = "large"
-color = "slate"
+color = "red"
+uid = 174865824
 
 user_agent = "Mozilla/5.0 (iPad; CPU OS 10_2 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14C92"
 
+# Set up telegram bot
+bot = telepot.Bot("")
+
 start = time.time()
 session = requests.Session()
+
+# Wait till 10 minutes before a drop
 
 while len(to_buy) == 0:
 
@@ -35,7 +42,8 @@ while len(to_buy) == 0:
     to_buy = [i for i in items if keyword in i['name'].lower()]
     
     if len(to_buy) == 0:
-        time.sleep(0.5)
+        print("Nothing yet")
+        time.sleep(1)
 
 for item in to_buy:
     # Get product info
@@ -49,7 +57,7 @@ for item in to_buy:
     # Find size and style
     style = {}
     for s in product_page['styles']:
-        if s['name'].lower() == color.lower():
+        if s['name'].lower() in color.lower():
             style = s
 
     size = 0
@@ -88,6 +96,8 @@ params = {
 
 response = session.post("https://www.supremenewyork.com/checkout.json", data=params, headers={
     "User-agent" : user_agent
-}).json()
+}).text
+took = time.time() - start
 
-print(time.time() - start)
+
+bot.sendMessage(uid, "%s in %ss" %(response, took))
