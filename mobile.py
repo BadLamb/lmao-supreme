@@ -47,11 +47,11 @@ def buy_product(json):
         "is_from_ios_native" : "1",
         }
 
-    x = session.post("http://supremenewyork.com/shop/checkout.json", data=params, headers={
+    x = session.post("https://www.supremenewyork.com/checkout.json", data=params, headers={
         "User-agent" : user_agent
     }).text
 
-    print (len(x))
+    print (x)
 
 wanted_product = ["Supreme®/Duralex® Glasses (Set of 4)",
                   "Supreme Truth Tour Jacket"]
