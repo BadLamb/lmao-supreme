@@ -33,6 +33,9 @@ while len(to_buy) == 0:
             known_names.append(i['name']) 
 
     to_buy = [i for i in items if keyword in i['name'].lower()]
+    
+    if len(to_buy) == 0:
+        time.sleep(0.5)
 
 for item in to_buy:
     # Get product info
