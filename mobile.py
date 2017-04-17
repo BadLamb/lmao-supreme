@@ -18,7 +18,7 @@ start = time.time()
 session = requests.Session()
 
 # Wait till 10 minutes before a drop
-drop_time = timezone('US/Eastern').localize(
+drop_time = timezone('Europe/London').localize(
     datetime.datetime.strptime("20/04/2017 10:57", "%d/%m/%Y %H:%M")
 )
 
